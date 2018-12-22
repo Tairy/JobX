@@ -76,10 +76,10 @@ if [ $? -ne 1 ];then
 fi
 
 #check openjdk
-#if [ "`${RUNJAVA} -version 2>&1 | head -1|grep "openjdk"|wc -l`"x == "1"x ]; then
-#  echo_r "ERROR: please uninstall OpenJDK and install jdk first"
-#  exit 1;
-#fi
+if [ "`${RUNJAVA} -version 2>&1 | head -1|grep "openjdk"|wc -l`"x == "1"x ]; then
+  echo_r "ERROR: please uninstall OpenJDK and install jdk first"
+  exit 1;
+fi
 
 # OS specific support.  $var _must_ be set to either true or false.
 cygwin=false
@@ -125,7 +125,7 @@ CONFIG_PATH=${DEPLOY_PATH}/WEB-INF/classes/config.properties
 #先检查dist下是否有war包
 if [[ ! -f "${WORKDIR}/${APP_WAR_NAME}" ]] ; then
     #dist下没有war包则检查server的target下是否有war包.
-   if [[ ! -f "${MAVEN_TARGET_WAR}" ]] ; then
+   if [ ! -f "${MAVEN_TARGET_WAR}" ] ; then
       echo_w "[JobX] please build project first!"
       exit 0;
    else
@@ -151,6 +151,7 @@ do
   CLASSPATH="$CLASSPATH":"$jar"
 done
 CLASSPATH="$CLASSPATH":${DEPLOY_PATH}/WEB-INF/classes
+
 #default launcher
 [[ -z "${JOBX_LAUNCHER}" ]] && JOBX_LAUNCHER="tomcat";
 #server'port
