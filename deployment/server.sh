@@ -76,10 +76,10 @@ if [ $? -ne 1 ];then
 fi
 
 #check openjdk
-if [ "`${RUNJAVA} -version 2>&1 | head -1|grep "openjdk"|wc -l`"x == "1"x ]; then
-  echo_r "ERROR: please uninstall OpenJDK and install jdk first"
-  exit 1;
-fi
+#if [ "`${RUNJAVA} -version 2>&1 | head -1|grep "openjdk"|wc -l`"x == "1"x ]; then
+#  echo_r "ERROR: please uninstall OpenJDK and install jdk first"
+#  exit 1;
+#fi
 
 # OS specific support.  $var _must_ be set to either true or false.
 cygwin=false
@@ -123,16 +123,16 @@ CONFIG_PATH=${DEPLOY_PATH}/WEB-INF/classes/config.properties
 ###############################################################################################
 
 #先检查dist下是否有war包
-if [ ! -f "${WORKDIR}/${APP_WAR_NAME}" ] ; then
+if [[ ! -f "${WORKDIR}/${APP_WAR_NAME}" ]] ; then
     #dist下没有war包则检查server的target下是否有war包.
-   if [ ! -f "${MAVEN_TARGET_WAR}" ] ; then
+   if [[ ! -f "${MAVEN_TARGET_WAR}" ]] ; then
       echo_w "[JobX] please build project first!"
       exit 0;
    else
       cp ${MAVEN_TARGET_WAR} ${WORKDIR};
    fi
 fi
-if [ ! -f "${DEPLOY_PATH}" ] ; then
+if [[ ! -f "${DEPLOY_PATH}" ]] ; then
     mkdir -p ${DEPLOY_PATH}
     # unpackage war to dist
     cp ${WORKDIR}/${APP_WAR_NAME} ${DEPLOY_PATH} &&
@@ -142,7 +142,7 @@ if [ ! -f "${DEPLOY_PATH}" ] ; then
 fi
 
 # Add jars to classpath
-if [ ! -z "$CLASSPATH" ] ; then
+if [[ ! -z "$CLASSPATH" ]] ; then
   CLASSPATH="$CLASSPATH":
 fi
 
@@ -152,12 +152,12 @@ do
 done
 CLASSPATH="$CLASSPATH":${DEPLOY_PATH}/WEB-INF/classes
 #default launcher
-[ -z "${JOBX_LAUNCHER}" ] && JOBX_LAUNCHER="tomcat";
+[[ -z "${JOBX_LAUNCHER}" ]] && JOBX_LAUNCHER="tomcat";
 #server'port
-if [ $# -gt 0 ] ;then
+if [[ $# -gt 0 ]] ;then
   JOBX_PORT=$1
-  if [ "$JOBX_PORT" -gt 0 ] 2>/dev/null ;then
-      if [ $JOBX_PORT -lt 0 ] || [ $JOBX_PORT -gt 65535 ];then
+  if [[ "$JOBX_PORT" -gt 0 ]] 2>/dev/null ;then
+      if [[ $JOBX_PORT -lt 0 ]] || [[ $JOBX_PORT -gt 65535 ]];then
          echo_r "server'port error,muse be between 0 and 65535!"
       fi
   else
@@ -165,7 +165,7 @@ if [ $# -gt 0 ] ;then
       exit 1;
   fi
 fi
-[ -z "${JOBX_PORT}" ] && JOBX_PORT="20501";
+[[ -z "${JOBX_PORT}" ]] && JOBX_PORT="20501";
 #start server....
 printf "[${BLUE_COLOR}jobx${RES}] ${WHITE_COLOR} server Starting @ [${GREEN_COLOR}${JOBX_PORT}${RES}].... ${RES}\n"
 MAIN="com.jobxhub.server.JobXServer"
